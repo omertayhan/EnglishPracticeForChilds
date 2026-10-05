@@ -1,0 +1,561 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Let's Play English!</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🦉%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1b2b4b; --sun:#ffd23f; --coral:#ff6f61; --mint:#4bd8a0; --grape:#9a86ff; --paper:#fff; --tc:#ffd23f;
+  --font:"Baloo 2","Trebuchet MS","Segoe UI Rounded","Arial Rounded MT Bold",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:var(--font);color:var(--ink);min-height:100vh;overflow-x:hidden;
+  background:linear-gradient(#6cc3ff 0%,#b8e6ff 55%,#e8f8ff 100%) fixed}
+#app{position:relative;z-index:2;max-width:1000px;margin:0 auto;padding:14px 16px 150px}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:4px solid var(--ink);outline-offset:3px}
+
+/* ---------- arka plan sahnesi ---------- */
+.scene{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.sun{position:absolute;top:26px;right:5%;width:92px;height:92px;border-radius:50%;background:#ffe56b;box-shadow:0 0 0 14px rgba(255,229,107,.35),0 0 0 30px rgba(255,229,107,.18);animation:pulse 5s ease-in-out infinite}
+.cloud{position:absolute;left:-220px;width:150px;height:46px;background:#fff;border-radius:50px;opacity:.9;animation:drift linear infinite}
+.cloud::before,.cloud::after{content:"";position:absolute;background:#fff;border-radius:50%}
+.cloud::before{width:62px;height:62px;top:-30px;left:22px}
+.cloud::after{width:78px;height:78px;top:-40px;left:66px}
+.cloud.a{top:12%;animation-duration:70s}
+.cloud.b{top:30%;transform:scale(.7);animation-duration:95s;animation-delay:-40s}
+.cloud.c{top:52%;transform:scale(.5);animation-duration:120s;animation-delay:-80s}
+.hills{position:absolute;left:0;bottom:0;width:100%;height:210px}
+.floaty{position:absolute;bottom:-60px;font-size:34px;opacity:.85;animation:rise linear infinite}
+
+/* ---------- ortak "çıkartma" görünümü ---------- */
+.topic,.card,.opt,.tile,.qbox,.btn,.tab,.slot,.total,.res,.mc,.bubble,.stk,.banner{border:3px solid var(--ink);box-shadow:0 5px 0 var(--ink)}
+.topic,.card,.opt,.tile,.qbox,.btn,.tab,.total,.res,.mc,.stk,.banner{border-radius:22px}
+.slot{border-radius:16px}
+
+/* ---------- ana sayfa ---------- */
+.hero{display:flex;align-items:center;gap:14px;margin:6px 0 14px;flex-wrap:wrap}
+.owl{font-size:76px;line-height:1;display:inline-block;filter:drop-shadow(0 4px 0 rgba(27,43,75,.25));animation:bob 2.6s ease-in-out infinite}
+.hero h1{margin:0;font-size:clamp(34px,8vw,60px);line-height:.95;font-weight:800;color:#fff;
+  -webkit-text-stroke:2px var(--ink);paint-order:stroke fill;text-shadow:0 5px 0 var(--ink)}
+.hero p{margin:8px 0 0;font-size:20px;font-weight:700}
+.hud{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:0 0 20px}
+.total{background:var(--sun);padding:6px 16px;font-size:22px;font-weight:800;white-space:nowrap}
+.lvl{flex:1;min-width:200px;background:#fff;border:3px solid var(--ink);border-radius:99px;box-shadow:0 4px 0 var(--ink);padding:4px 6px;position:relative;height:40px}
+.lvl i{display:block;height:100%;border-radius:99px;background:repeating-linear-gradient(45deg,var(--mint),var(--mint) 12px,#7be8bb 12px,#7be8bb 24px)}
+.lvl span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px}
+.btn{background:var(--paper);padding:8px 18px;font-size:20px;font-weight:800;display:inline-block;transition:transform .1s,box-shadow .1s}
+.btn:hover{transform:translateY(-2px)}
+.btn:active{transform:translateY(4px);box-shadow:0 1px 0 var(--ink)}
+.btn.go{background:var(--mint)}
+.btn.play{background:var(--sun)}
+.btn.stop{background:var(--coral)}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:22px 18px}
+.topic{position:relative;display:flex;flex-direction:column;align-items:flex-start;padding:14px 16px 14px;
+  background:linear-gradient(160deg,var(--tc),#fff 130%);transition:transform .15s,box-shadow .15s;overflow:hidden}
+.topic:nth-child(odd){transform:rotate(-1.4deg)}
+.topic:nth-child(even){transform:rotate(1.4deg)}
+.topic:hover{transform:rotate(0) translateY(-6px) scale(1.03);box-shadow:0 11px 0 var(--ink)}
+.topic:active{transform:translateY(4px);box-shadow:0 1px 0 var(--ink)}
+.topic .ic{font-size:72px;line-height:1.05;filter:drop-shadow(0 4px 0 rgba(27,43,75,.2))}
+.topic:hover .ic{animation:wiggle .5s}
+.topic b{font-size:26px;font-weight:800;line-height:1.05}
+.topic small{font-size:18px;font-weight:600}
+.topic .st{margin-top:6px;font-size:26px;letter-spacing:3px;color:#fff;-webkit-text-stroke:1.5px var(--ink);paint-order:stroke fill}
+
+/* ---------- konu sayfası ---------- */
+.nav{display:flex;gap:12px;margin:4px 0 14px;flex-wrap:wrap}
+.banner{position:relative;overflow:hidden;background:linear-gradient(120deg,var(--tc),#fff 140%);padding:14px 18px;margin-bottom:14px;min-height:112px;display:flex;align-items:center}
+.banner h2{position:relative;z-index:2;margin:0;font-size:clamp(30px,7vw,48px);line-height:1;font-weight:800;color:#fff;-webkit-text-stroke:2px var(--ink);paint-order:stroke fill;text-shadow:0 4px 0 var(--ink)}
+.banner h2 small{display:block;font-size:20px;-webkit-text-stroke:0;text-shadow:none;color:var(--ink);margin-top:6px}
+.banner .fl{position:absolute;font-size:44px;animation:float 4s ease-in-out infinite;filter:drop-shadow(0 3px 0 rgba(27,43,75,.18))}
+.tabs{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.tab{padding:6px 18px;font-size:21px;font-weight:800;background:var(--paper)}
+.tab.on{background:var(--tc)}
+
+.coach{display:flex;align-items:flex-end;gap:10px;margin-bottom:16px}
+.coach .owl{font-size:62px;animation:none}
+.coach .owl.hop{animation:hop .5s}
+.bubble{position:relative;background:#fff;border-radius:20px;padding:8px 16px;font-size:22px;line-height:1.1;font-weight:800}
+.bubble small{display:block;font-size:16px;font-weight:600;opacity:.75}
+.bubble::before{content:"";position:absolute;left:-12px;bottom:14px;width:18px;height:18px;background:#fff;border-left:3px solid var(--ink);border-bottom:3px solid var(--ink);transform:rotate(45deg)}
+.streak{margin-left:auto;font-size:26px;font-weight:800;background:#fff;border:3px solid var(--ink);border-radius:99px;padding:0 14px;box-shadow:0 4px 0 var(--ink)}
+
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:16px}
+.card{display:flex;flex-direction:column;align-items:center;padding:12px 8px 12px;background:var(--paper);transition:transform .12s,box-shadow .12s,background .2s}
+.card:hover{transform:translateY(-3px);box-shadow:0 8px 0 var(--ink)}
+.card:active,.card.pop{transform:translateY(4px);box-shadow:0 1px 0 var(--ink)}
+.card.lit{background:var(--tc);transform:scale(1.07)}
+.card .v{font-size:68px;line-height:1.15}
+.card.pop .v,.card.lit .v{animation:bounce .45s}
+.card b{font-size:26px;font-weight:800;line-height:1.1}
+.card small{font-size:17px;font-weight:600;opacity:.75}
+.num{font-weight:800;color:var(--coral);-webkit-text-stroke:2px var(--ink);paint-order:stroke fill}
+.card .v.num{font-size:76px}
+.tools{display:flex;gap:12px;align-items:center;margin-bottom:14px;flex-wrap:wrap}
+.hint{font-size:19px;font-weight:700;margin:0}
+
+.prog{height:18px;border:3px solid var(--ink);border-radius:99px;background:#fff;overflow:hidden;margin-bottom:14px}
+.prog i{display:block;height:100%;background:var(--tc);transition:width .3s}
+.qbox{background:var(--paper);padding:14px;text-align:center;margin-bottom:18px;display:flex;flex-direction:column;align-items:center;gap:6px}
+.big{font-size:clamp(84px,22vw,130px);line-height:1.05;filter:drop-shadow(0 6px 0 rgba(27,43,75,.18))}
+.big.num{font-size:clamp(84px,22vw,130px)}
+.q{margin:0;font-size:24px;font-weight:800}
+.opts{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.opt{background:var(--paper);padding:14px 8px;font-size:28px;font-weight:800;min-height:84px;transition:transform .1s,box-shadow .1s}
+.opt:hover{transform:translateY(-2px)}
+.opts.listen .opt{font-size:60px;line-height:1.1}
+.opts.listen .opt .num{font-size:62px}
+.opt:active{transform:translateY(4px);box-shadow:0 1px 0 var(--ink)}
+.opt.ok{background:var(--mint);animation:bounce .45s}
+.opt.bad{background:var(--coral);animation:shake .35s}
+.foot{margin-top:18px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;min-height:56px}
+.fb{margin:0;font-size:24px;font-weight:800}
+.fb.g{color:#0b7a50}.fb.r{color:#b3261e}
+
+.slots{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:4px 0 20px}
+.slot{width:54px;height:64px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:38px;font-weight:800;box-shadow:0 4px 0 var(--ink)}
+.slot.f{background:var(--sun);animation:bounce .35s}
+.tiles{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.tile{width:62px;height:68px;background:var(--grape);font-size:36px;font-weight:800;transition:transform .1s,box-shadow .1s}
+.tile:active{transform:translateY(4px);box-shadow:0 1px 0 var(--ink)}
+.tile:disabled{opacity:.25;box-shadow:none;transform:translateY(5px);cursor:default}
+.tile.bad{animation:shake .35s;background:var(--coral)}
+
+/* eşleştirme oyunu */
+.memo{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.mc{position:relative;height:118px;padding:0;background:transparent;transform-style:preserve-3d;transition:transform .4s}
+.mc.open,.mc.done{transform:rotateY(180deg)}
+.mc.done{animation:none}
+.face{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;border-radius:18px;backface-visibility:hidden;-webkit-backface-visibility:hidden;text-align:center}
+.face.back{background:repeating-linear-gradient(45deg,var(--grape),var(--grape) 10px,#b3a4ff 10px,#b3a4ff 20px);font-size:44px}
+.face.front{background:#fff;transform:rotateY(180deg);font-size:58px;line-height:1}
+.face.front.txt{font-size:24px;font-weight:800;padding:4px}
+.mc.done .face.front{background:var(--mint)}
+.mc.done{box-shadow:0 2px 0 var(--ink)}
+
+/* sonuç ve albüm */
+.res{background:var(--paper);padding:24px 16px;text-align:center}
+.res h3{margin:0 0 4px;font-size:40px;font-weight:800}
+.res .stars{font-size:68px;letter-spacing:6px;color:var(--sun);-webkit-text-stroke:3px var(--ink);paint-order:stroke fill}
+.res p{font-size:22px;font-weight:700;margin:6px 0 16px}
+.res .row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.newstk{display:inline-block;background:var(--sun);border:3px solid var(--ink);border-radius:20px;padding:6px 18px;font-size:24px;font-weight:800;margin-bottom:14px;animation:bounce .6s}
+.album{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:18px}
+.stk{background:linear-gradient(160deg,var(--tc),#fff 130%);padding:14px 8px;text-align:center}
+.stk .e{font-size:76px;line-height:1.1}
+.stk b{display:block;font-size:22px}
+.stk small{font-size:15px;font-weight:600}
+.stk.lock{background:#dfe7f2;border-style:dashed}
+.stk.lock .e{filter:grayscale(1) brightness(.5);opacity:.5}
+
+.conf{position:fixed;top:-60px;font-size:36px;pointer-events:none;animation:fall 2.6s linear forwards;z-index:20}
+
+@keyframes bob{50%{transform:translateY(-8px) rotate(-5deg)}}
+@keyframes hop{30%{transform:translateY(-22px) rotate(-8deg)}60%{transform:translateY(0) rotate(5deg)}}
+@keyframes bounce{40%{transform:scale(1.25)}70%{transform:scale(.93)}}
+@keyframes wiggle{25%{transform:rotate(-12deg)}75%{transform:rotate(12deg)}}
+@keyframes shake{25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+@keyframes float{50%{transform:translateY(-12px) rotate(6deg)}}
+@keyframes drift{to{left:110%}}
+@keyframes pulse{50%{transform:scale(1.07)}}
+@keyframes rise{to{transform:translateY(-115vh) rotate(25deg)}}
+@keyframes fall{to{transform:translateY(112vh) rotate(360deg)}}
+@media (max-width:560px){
+  .owl{font-size:56px}
+  .coach .owl{font-size:50px}
+  .slot{width:44px;height:56px;font-size:32px}
+  .tile{width:54px;height:60px;font-size:32px}
+  .memo{grid-template-columns:repeat(3,1fr)}
+  .mc{height:104px}
+  .face.front{font-size:50px}
+  .sun{width:64px;height:64px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+<div class="scene" aria-hidden="true">
+  <div class="sun"></div>
+  <div class="cloud a"></div><div class="cloud b"></div><div class="cloud c"></div>
+  <span class="floaty" style="left:8%;animation-duration:26s">🎈</span>
+  <span class="floaty" style="left:46%;animation-duration:34s;animation-delay:-12s">⭐</span>
+  <span class="floaty" style="left:78%;animation-duration:30s;animation-delay:-20s">🎈</span>
+  <svg class="hills" viewBox="0 0 1440 210" preserveAspectRatio="none">
+    <path d="M0 110 Q240 20 520 90 T1040 70 T1440 100 V210 H0Z" fill="#8be2a0"/>
+    <path d="M0 160 Q300 90 640 150 T1440 140 V210 H0Z" fill="#4bd8a0"/>
+    <path d="M0 195 Q360 165 760 190 T1440 185 V210 H0Z" fill="#2fb98a"/>
+  </svg>
+</div>
+<div id="app"></div>
+
+<script>
+/* ---------- Veri: [İngilizce, görsel, Türkçe] ---------- */
+const TOPICS = [
+  {id:'greetings', name:'Greetings', tr:'Selamlaşma', icon:'👋', col:'#ffd23f', words:[
+    ['Hello','👋','Merhaba'],['Goodbye','🙋','Hoşça kal'],['Good morning','🌅','Günaydın'],
+    ['Good night','🌙','İyi geceler'],['Thank you','🙏','Teşekkürler'],['Sorry','😔','Özür dilerim'],
+    ['Yes','✅','Evet'],['No','❌','Hayır']]},
+  {id:'family', name:'My Family', tr:'Ailem', icon:'👨‍👩‍👧‍👦', col:'#ff9fb0', words:[
+    ['Mother','👩','Anne'],['Father','👨','Baba'],['Sister','👧','Kız kardeş'],['Brother','👦','Erkek kardeş'],
+    ['Grandmother','👵','Büyükanne'],['Grandfather','👴','Büyükbaba'],['Baby','👶','Bebek'],['Family','👨‍👩‍👧‍👦','Aile']]},
+  {id:'colors', name:'Colors', tr:'Renkler', icon:'🎨', col:'#b8a8ff', words:[
+    ['Red','🔴','Kırmızı'],['Blue','🔵','Mavi'],['Yellow','🟡','Sarı'],['Green','🟢','Yeşil'],
+    ['Orange','🟠','Turuncu'],['Purple','🟣','Mor'],['Black','⚫','Siyah'],['White','⚪','Beyaz'],['Brown','🟤','Kahverengi']]},
+  {id:'numbers', name:'Numbers', tr:'Sayılar', icon:'🔢', col:'#7fe3c3', num:true, words:[
+    ['One','1','Bir'],['Two','2','İki'],['Three','3','Üç'],['Four','4','Dört'],['Five','5','Beş'],
+    ['Six','6','Altı'],['Seven','7','Yedi'],['Eight','8','Sekiz'],['Nine','9','Dokuz'],['Ten','10','On']]},
+  {id:'animals', name:'Animals', tr:'Hayvanlar', icon:'🦁', col:'#ffbb6e', words:[
+    ['Cat','🐱','Kedi'],['Dog','🐶','Köpek'],['Bird','🐦','Kuş'],['Fish','🐟','Balık'],['Rabbit','🐰','Tavşan'],
+    ['Horse','🐴','At'],['Cow','🐮','İnek'],['Duck','🦆','Ördek'],['Lion','🦁','Aslan'],['Elephant','🐘','Fil']]},
+  {id:'fruits', name:'Fruits', tr:'Meyveler', icon:'🍓', col:'#ff8f8f', words:[
+    ['Apple','🍎','Elma'],['Banana','🍌','Muz'],['Orange','🍊','Portakal'],['Grapes','🍇','Üzüm'],
+    ['Strawberry','🍓','Çilek'],['Watermelon','🍉','Karpuz'],['Lemon','🍋','Limon'],['Pear','🍐','Armut'],['Cherry','🍒','Kiraz']]},
+  {id:'toys', name:'Toys', tr:'Oyuncaklar', icon:'🧸', col:'#8fbaff', words:[
+    ['Ball','⚽','Top'],['Teddy bear','🧸','Oyuncak ayı'],['Kite','🪁','Uçurtma'],['Car','🚗','Araba'],
+    ['Robot','🤖','Robot'],['Balloon','🎈','Balon'],['Train','🚂','Tren'],['Puzzle','🧩','Yapboz'],['Drum','🥁','Davul']]},
+  {id:'body', name:'My Body', tr:'Vücudum', icon:'🖐️', col:'#f7a8dc', words:[
+    ['Eye','👁️','Göz'],['Ear','👂','Kulak'],['Nose','👃','Burun'],['Mouth','👄','Ağız'],['Hand','✋','El'],
+    ['Foot','🦶','Ayak'],['Leg','🦵','Bacak'],['Arm','💪','Kol'],['Tooth','🦷','Diş']]},
+  {id:'clothes', name:'Clothes', tr:'Giysiler', icon:'👕', col:'#a8e6a1', words:[
+    ['Hat','🧢','Şapka'],['Shirt','👕','Tişört'],['Jeans','👖','Kot pantolon'],['Dress','👗','Elbise'],
+    ['Shoes','👟','Ayakkabı'],['Socks','🧦','Çorap'],['Coat','🧥','Mont'],['Scarf','🧣','Atkı'],['Gloves','🧤','Eldiven']]},
+  {id:'feelings', name:'Feelings', tr:'Duygular', icon:'😊', col:'#ffe066', words:[
+    ['Happy','😊','Mutlu'],['Sad','😢','Üzgün'],['Angry','😠','Kızgın'],['Tired','😴','Yorgun'],
+    ['Scared','😨','Korkmuş'],['Cold','🥶','Üşümüş'],['Hot','🥵','Sıcak'],['Surprised','😲','Şaşırmış']]},
+  {id:'classroom', name:'Classroom', tr:'Sınıf', icon:'🎒', col:'#9fd3f7', words:[
+    ['Book','📖','Kitap'],['Pencil','✏️','Kalem'],['Bag','🎒','Çanta'],['Ruler','📏','Cetvel'],
+    ['Scissors','✂️','Makas'],['School','🏫','Okul'],['Teacher','🧑‍🏫','Öğretmen'],['Pen','🖊️','Tükenmez kalem']]}
+];
+const LEVELS = [[0,'Beginner','🐣'],[5,'Explorer','🧭'],[12,'Star','🌟'],[22,'Champion','🏆'],[33,'Super Owl','🦉']];
+const GOOD = [['Great job!','Aferin!'],['Awesome!','Harika!'],['Super!','Süper!'],['Wow!','Vay canına!'],['Perfect!','Mükemmel!']];
+
+/* ---------- Yardımcılar ---------- */
+const $ = (s, r=document) => r.querySelector(s);
+const app = $('#app');
+const shuffle = a => { a = a.slice(); for (let i=a.length-1;i>0;i--){ const j=Math.random()*(i+1)|0; [a[i],a[j]]=[a[j],a[i]]; } return a; };
+const load = k => { try { return localStorage.getItem('epc:'+k); } catch(e){ return null; } };
+const save = (k,v) => { try { localStorage.setItem('epc:'+k, v); } catch(e){} };
+const starsOf = t => +load('stars:'+t.id) || 0;
+const totalStars = () => TOPICS.reduce((s,t)=>s+starsOf(t),0);
+const starStr = n => '★'.repeat(n|0) + '☆'.repeat(3-(n|0));
+const cls = t => t.num ? 'num' : '';
+const pickOne = a => a[Math.random()*a.length|0];
+let timer = null;
+
+let voice = null;
+function pickVoice(){
+  if (!('speechSynthesis' in window)) return;
+  const vs = speechSynthesis.getVoices();
+  voice = vs.find(v=>/^en[-_]US/i.test(v.lang)) || vs.find(v=>/^en/i.test(v.lang)) || null;
+}
+if ('speechSynthesis' in window){ pickVoice(); speechSynthesis.onvoiceschanged = pickVoice; }
+function speak(text){
+  if (!('speechSynthesis' in window)) return;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'en-US'; u.rate = .8; u.pitch = 1.1;
+  if (voice) u.voice = voice;
+  speechSynthesis.speak(u);
+}
+let actx;
+function tone(freq, dur){
+  try{
+    actx = actx || new (window.AudioContext||window.webkitAudioContext)();
+    const o = actx.createOscillator(), g = actx.createGain();
+    o.type='triangle'; o.frequency.value=freq; g.gain.value=.12;
+    o.connect(g); g.connect(actx.destination); o.start(); o.stop(actx.currentTime+dur);
+  }catch(e){}
+}
+function confetti(n=18){
+  const em = ['🎉','⭐','🎈','✨','🌟','🎊'];
+  for (let i=0;i<n;i++){
+    const s = document.createElement('span');
+    s.className='conf'; s.textContent=em[i%em.length];
+    s.style.left=(Math.random()*95)+'vw'; s.style.animationDelay=(Math.random()*.7)+'s';
+    document.body.appendChild(s); setTimeout(()=>s.remove(),3600);
+  }
+}
+function say(en, tr=''){
+  const b = $('#bubble'); if (!b) return;
+  b.innerHTML = `<span>${en}</span>${tr?`<small>${tr}</small>`:''}`;
+  const o = $('#coachOwl'); if (o){ o.classList.remove('hop'); void o.offsetWidth; o.classList.add('hop'); }
+}
+function level(total){
+  let i=0; LEVELS.forEach((l,k)=>{ if(total>=l[0]) i=k; });
+  const cur=LEVELS[i], nxt=LEVELS[i+1];
+  const pct = nxt ? (total-cur[0])/(nxt[0]-cur[0])*100 : 100;
+  return {cur, nxt, pct};
+}
+
+/* ---------- Sayfalar ---------- */
+function home(){
+  const total = totalStars(), L = level(total);
+  app.innerHTML = `
+  <header class="hero">
+    <div class="owl" aria-hidden="true">🦉</div>
+    <div><h1>Let's Play<br>English!</h1><p>Bir konu seç, öğren, oyna, yıldız topla.</p></div>
+  </header>
+  <div class="hud">
+    <div class="total" title="Toplam yıldız">⭐ ${total}/${TOPICS.length*3}</div>
+    <div class="lvl" title="Seviye"><i style="width:${Math.max(L.pct,8)}%"></i><span>${L.cur[2]} ${L.cur[1]}${L.nxt?` → ${L.nxt[2]}`:''}</span></div>
+    <a class="btn" href="#/album">🏅 Albüm</a>
+  </div>
+  <main class="grid">
+    ${TOPICS.map(t=>`
+      <a class="topic" style="--tc:${t.col}" href="#/t/${t.id}/learn">
+        <span class="ic" aria-hidden="true">${t.icon}</span>
+        <b>${t.name}</b><small>${t.tr}</small>
+        <span class="st" aria-label="${starsOf(t)} yıldız">${starStr(starsOf(t))}</span>
+      </a>`).join('')}
+  </main>`;
+}
+
+function album(){
+  app.innerHTML = `
+  <nav class="nav"><a class="btn" href="#/">← Konular</a></nav>
+  <div class="banner" style="--tc:#ffd23f"><h2>Sticker Album<small>Bir konuda quiz'den 2 yıldız al, çıkartmayı aç!</small></h2>
+    <span class="fl" style="right:8%;top:14px">🏅</span><span class="fl" style="right:22%;bottom:10px;animation-delay:-1s">⭐</span></div>
+  <div class="album">
+    ${TOPICS.map(t=>{ const ok = starsOf(t)>=2; return `
+      <div class="stk ${ok?'':'lock'}" style="--tc:${t.col}">
+        <div class="e" aria-hidden="true">${ok?t.icon:t.icon}</div>
+        <b>${t.name}</b><small>${ok?'Açıldı! '+starStr(starsOf(t)):'🔒 2 yıldız topla'}</small>
+      </div>`; }).join('')}
+  </div>`;
+}
+
+function topic(id, mode){
+  const t = TOPICS.find(x=>x.id===id);
+  if (!t) return home();
+  if (!['learn','quiz','spell','match'].includes(mode)) mode='learn';
+  const tabs = [['learn','👀 Öğren'],['quiz','❓ Quiz'],['spell','🔤 Harfler'],['match','🃏 Eşleştir']];
+  const fl = t.words.slice(0,5).map((w,i)=>`<span class="fl" style="right:${3+i*13}%;top:${i%2?58:10}px;animation-delay:${-i*.7}s">${t.num?w[1]:w[1]}</span>`).join('');
+  app.style.setProperty('--tc', t.col);
+  app.innerHTML = `
+  <nav class="nav"><a class="btn" href="#/">← Konular</a></nav>
+  <div class="banner" style="--tc:${t.col}"><h2>${t.icon} ${t.name}<small>${t.tr}</small></h2>${fl}</div>
+  <div class="tabs" role="tablist">
+    ${tabs.map(([m,l])=>`<a class="tab ${m===mode?'on':''}" role="tab" aria-selected="${m===mode}" style="--tc:${t.col}" href="#/t/${id}/${m}">${l}</a>`).join('')}
+  </div>
+  <div class="coach"><span class="owl" id="coachOwl" aria-hidden="true">🦉</span><div class="bubble" id="bubble"></div><span class="streak" id="streak" hidden></span></div>
+  <section id="stage"></section>`;
+  ({learn, quiz, spell, match})[mode](t);
+}
+
+/* Öğren: kartlar + slayt gösterisi */
+function learn(t){
+  const stage = $('#stage');
+  say('Tap a card!', 'Karta dokun, sesini dinle.');
+  stage.innerHTML = `
+  <div class="tools"><button class="btn play" id="show">▶ Hepsini göster</button><p class="hint">Ya da istediğin karta dokun. 🔊</p></div>
+  <div class="cards">${t.words.map((w,i)=>`
+    <button class="card" data-i="${i}" aria-label="${w[0]} - ${w[2]}">
+      <span class="v ${cls(t)}">${w[1]}</span><b>${w[0]}</b><small>${w[2]}</small>
+    </button>`).join('')}</div>`;
+  const cards = [...stage.querySelectorAll('.card')];
+  cards.forEach(c=>c.onclick=()=>{
+    clearInterval(timer); resetShow();
+    const w = t.words[+c.dataset.i];
+    speak(w[0]); say(w[0], w[2]);
+    c.classList.add('pop'); setTimeout(()=>c.classList.remove('pop'),450);
+  });
+  const btn = $('#show');
+  function resetShow(){ btn.textContent='▶ Hepsini göster'; btn.classList.remove('stop'); btn.classList.add('play'); cards.forEach(c=>c.classList.remove('lit')); }
+  btn.onclick = ()=>{
+    if (timer){ clearInterval(timer); timer=null; resetShow(); return; }
+    btn.textContent='■ Durdur'; btn.classList.remove('play'); btn.classList.add('stop');
+    let k=0;
+    const step=()=>{
+      cards.forEach(c=>c.classList.remove('lit'));
+      if (k>=cards.length){ clearInterval(timer); timer=null; resetShow(); say('Well done!','Hepsini izledin!'); confetti(8); return; }
+      const c=cards[k], w=t.words[k];
+      c.classList.add('lit'); c.scrollIntoView({block:'center',behavior:'smooth'});
+      speak(w[0]); say(w[0], w[2]); k++;
+    };
+    step(); timer=setInterval(step,2200);
+  };
+}
+
+/* Quiz: resim→kelime ve ses→resim */
+function quiz(t){
+  const stage = $('#stage'), stEl = $('#streak');
+  const n = Math.min(8, t.words.length);
+  const qs = shuffle(t.words).slice(0,n).map((w,i)=>({
+    w, type: i%2 ? 'listen' : 'pic',
+    opts: shuffle([w, ...shuffle(t.words.filter(x=>x!==w)).slice(0,3)])
+  }));
+  let i=0, score=0, locked=false, streak=0;
+  say("Let's play!", 'Hazır mısın?');
+
+  function show(){
+    const q = qs[i]; locked=false;
+    const prompt = q.type==='pic'
+      ? `<div class="big ${cls(t)}" aria-label="resim">${q.w[1]}</div><p class="q">Bu İngilizce ne?</p>`
+      : `<button class="btn play" id="play">🔊 Dinle</button><p class="q">Duyduğun hangisi?</p>`;
+    stage.innerHTML = `
+      <div class="prog" aria-label="${i+1}/${n}"><i style="width:${i/n*100}%"></i></div>
+      <div class="qbox">${prompt}</div>
+      <div class="opts ${q.type}">${q.opts.map((o,k)=>`
+        <button class="opt" data-k="${k}">${q.type==='pic' ? o[0] : `<span class="${cls(t)}">${o[1]}</span>`}</button>`).join('')}
+      </div>
+      <div class="foot"></div>`;
+    if (q.type==='listen'){ $('#play').onclick=()=>speak(q.w[0]); setTimeout(()=>speak(q.w[0]),250); }
+    stage.querySelectorAll('.opt').forEach(b=>b.onclick=()=>answer(b,q));
+  }
+
+  function answer(b,q){
+    if (locked) return; locked=true;
+    const ok = q.opts[+b.dataset.k]===q.w;
+    if (ok){
+      score++; streak++; b.classList.add('ok'); tone(660,.12); setTimeout(()=>tone(880,.15),120);
+      if (streak>=3){ say('You are on fire! 🔥','Üst üste '+streak+' doğru!'); }
+      else { const g=pickOne(GOOD); say(g[0],g[1]); }
+    } else {
+      streak=0; b.classList.add('bad'); tone(220,.25);
+      stage.querySelectorAll('.opt').forEach(x=>{ if(q.opts[+x.dataset.k]===q.w) x.classList.add('ok'); });
+      say('Try again next time!','Olsun, birlikte öğreniyoruz.');
+    }
+    stEl.hidden = streak<2; stEl.textContent = '🔥 '+streak;
+    setTimeout(()=>speak(q.w[0]), 250);
+    $('.foot').innerHTML = `
+      <p class="fb ${ok?'g':'r'}">${ok ? 'Harika! 🎉' : `Doğrusu: ${q.w[0]} (${q.w[2]})`}</p>
+      <button class="btn go" id="next">${i+1<n ? 'Devam' : 'Sonuç'}</button>`;
+    const nx = $('#next'); nx.onclick=()=>{ i++; i<n ? show() : finish(); }; nx.focus();
+  }
+
+  function finish(){
+    const r = score/n, s = r>=.9 ? 3 : r>=.6 ? 2 : 1;
+    const prev = starsOf(t);
+    save('stars:'+t.id, Math.max(s, prev));
+    const unlocked = s>=2 && prev<2;
+    confetti(s>=2 ? 26 : 8); stEl.hidden=true;
+    say(s===3?'You are a star!':'Good try!', s===3?'Sen bir yıldızsın!':'Tekrar oynayınca daha da iyi olacak.');
+    stage.innerHTML = `<div class="res">
+      <h3>${s===3?'Super! 🏆':s===2?'Aferin! 👏':'İyi deneme! 💪'}</h3>
+      <div class="stars" aria-label="${s} yıldız">${starStr(s)}</div>
+      <p>${n} sorudan ${score} tanesini bildin.</p>
+      ${unlocked?`<div class="newstk">🏅 Yeni çıkartma: ${t.icon} ${t.name}</div><br>`:''}
+      <div class="row"><button class="btn go" id="again">Tekrar oyna</button><a class="btn" href="#/t/${t.id}/match">🃏 Eşleştir</a><a class="btn" href="#/">Konular</a></div>
+    </div>`;
+    $('#again').onclick=()=>quiz(t);
+  }
+  show();
+}
+
+/* Harfler: harfleri sıraya dizerek kelimeyi yaz */
+function spell(t){
+  const stage = $('#stage');
+  const pool = shuffle(t.words.filter(w=>!/\s/.test(w[0]) && w[0].length<=10)).slice(0,6);
+  const n = pool.length; let i=0;
+  say('Spell the word!', 'Harflere sırayla dokun.');
+
+  function show(){
+    if (i>=n) return done();
+    const w = pool[i], word = w[0].toLowerCase(); let pos=0;
+    const letters = shuffle(word.split('').map((c,k)=>({c,k})));
+    stage.innerHTML = `
+      <div class="prog" aria-label="${i+1}/${n}"><i style="width:${i/n*100}%"></i></div>
+      <div class="qbox">
+        <div class="big ${cls(t)}">${w[1]}</div>
+        <p class="q">${w[2]}</p>
+        <button class="btn play" id="play">🔊 Dinle</button>
+      </div>
+      <div class="slots">${word.split('').map(()=>'<span class="slot"></span>').join('')}</div>
+      <div class="tiles">${letters.map(l=>`<button class="tile">${l.c}</button>`).join('')}</div>
+      <div class="foot"></div>`;
+    $('#play').onclick=()=>speak(w[0]);
+    const slots = stage.querySelectorAll('.slot');
+    stage.querySelectorAll('.tile').forEach(b=>b.onclick=()=>{
+      if (pos>=word.length) return;
+      if (b.textContent===word[pos]){
+        slots[pos].textContent=b.textContent; slots[pos].classList.add('f');
+        b.disabled=true; pos++; tone(600+pos*40,.1);
+        if (pos===word.length){
+          speak(w[0]); tone(880,.2); const g=pickOne(GOOD); say(g[0],g[1]);
+          $('.foot').innerHTML = `<p class="fb g">${w[0]} ✔</p><button class="btn go" id="next">${i+1<n?'Devam':'Bitir'}</button>`;
+          const nx=$('#next'); nx.onclick=()=>{ i++; show(); }; nx.focus();
+        }
+      } else {
+        b.classList.add('bad'); tone(220,.2); say('Oops!','Başka bir harf dene.');
+        setTimeout(()=>b.classList.remove('bad'),400);
+      }
+    });
+  }
+  function done(){
+    confetti(22); say('You did it!','Hepsini yazdın!');
+    stage.innerHTML = `<div class="res">
+      <h3>Bitti! 🎉</h3><div class="stars" aria-hidden="true">🔤⭐</div>
+      <p>${n} kelimeyi yazdın.</p>
+      <div class="row"><button class="btn go" id="again">Tekrar oyna</button><a class="btn" href="#/t/${t.id}/quiz">❓ Quiz'e geç</a><a class="btn" href="#/">Konular</a></div>
+    </div>`;
+    $('#again').onclick=()=>spell(t);
+  }
+  show();
+}
+
+/* Eşleştir: resim ve kelimeyi bul */
+function match(t){
+  const stage = $('#stage');
+  const pick = shuffle(t.words).slice(0,6);
+  const deck = shuffle(pick.flatMap((w,k)=>[{k,kind:'v'},{k,kind:'w'}]));
+  let first=null, lock=false, found=0, moves=0;
+  say('Find the pairs!', 'Resmi ve kelimeyi eşleştir.');
+  stage.innerHTML = `
+    <div class="tools"><p class="hint">Hamle: <b id="mv">0</b></p></div>
+    <div class="memo">${deck.map((d,idx)=>`
+      <button class="mc" data-i="${idx}" aria-label="kart">
+        <span class="face back" aria-hidden="true">❓</span>
+        <span class="face front ${d.kind==='v'?cls(t):'txt'}">${d.kind==='v'?pick[d.k][1]:pick[d.k][0]}</span>
+      </button>`).join('')}</div>
+    <div class="foot"></div>`;
+  const cards = [...stage.querySelectorAll('.mc')];
+  cards.forEach(c=>c.onclick=()=>{
+    if (lock || c.classList.contains('open') || c.classList.contains('done')) return;
+    const d = deck[+c.dataset.i];
+    c.classList.add('open'); speak(pick[d.k][0]); tone(500,.08);
+    if (!first){ first=c; return; }
+    moves++; $('#mv').textContent=moves;
+    const d1 = deck[+first.dataset.i];
+    if (d1.k===d.k){
+      first.classList.replace('open','done'); c.classList.replace('open','done'); first=null; found++;
+      tone(880,.15); say(pick[d.k][0]+'!', pick[d.k][2]);
+      if (found===pick.length) win();
+    } else {
+      lock=true; const a=first; first=null; tone(250,.15);
+      setTimeout(()=>{ a.classList.remove('open'); c.classList.remove('open'); lock=false; },900);
+    }
+  });
+  function win(){
+    confetti(24); say('You found them all!','Hepsini buldun!');
+    $('.foot').innerHTML = `<p class="fb g">${moves} hamlede bitirdin! 🎉</p><button class="btn go" id="again">Tekrar oyna</button><a class="btn" href="#/t/${t.id}/quiz">❓ Quiz'e geç</a>`;
+    $('#again').onclick=()=>match(t);
+  }
+}
+
+/* ---------- Yönlendirme ---------- */
+function route(){
+  clearInterval(timer); timer=null;
+  if ('speechSynthesis' in window) speechSynthesis.cancel();
+  app.style.setProperty('--tc', '#ffd23f');
+  const p = (location.hash.slice(1)||'/').split('/').filter(Boolean);
+  window.scrollTo(0,0);
+  if (p[0]==='t' && p[1]) topic(p[1], p[2]);
+  else if (p[0]==='album') album();
+  else home();
+}
+addEventListener('hashchange', route);
+route();
+</script>
+</body>
+</html>
