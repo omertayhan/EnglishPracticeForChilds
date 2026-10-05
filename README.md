@@ -13,13 +13,3 @@ Greetings, My Family, Colors, Numbers, Animals, Fruits, Toys, My Body, Clothes, 
 
 ## Ödül sistemi
 Konu başına 1–3 yıldız, seviye çubuğu (Beginner → Super Owl), 2 yıldızda açılan çıkartma albümü. İlerleme tarayıcıda (localStorage) saklanır.
-
-## Çalıştırma
-Derleme yok, bağımlılık yok. `index.html` dosyasını tarayıcıda aç.
-Ses için Chrome / Edge / Safari önerilir (tarayıcının konuşma sentezi kullanılır).
-
-## Yayınlama (GitHub Pages)
-Repo → Settings → Pages → Branch: `main` / root. Adres: `https://omertayhan.github.io/EnglishPracticeForChilds/`
-
-## Kelime ekleme
-`index.html` içindeki `TOPICS` dizisine `['English','emoji','Türkçe']` satırı ekle.
