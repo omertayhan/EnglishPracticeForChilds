@@ -2,7 +2,8 @@
 <html lang="tr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#6cc3ff">
 <title>Let's Play English!</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🦉%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -52,7 +53,7 @@ button{font-family:inherit;color:inherit;cursor:pointer}
 .lvl i{display:block;height:100%;border-radius:99px;background:repeating-linear-gradient(45deg,var(--mint),var(--mint) 12px,#7be8bb 12px,#7be8bb 24px)}
 .lvl span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px}
 .btn{background:var(--paper);padding:8px 18px;font-size:20px;font-weight:800;display:inline-block;transition:transform .1s,box-shadow .1s}
-.btn:hover{transform:translateY(-2px)}
+@media (hover:hover){.btn:hover{transform:translateY(-2px)}}
 .btn:active{transform:translateY(4px);box-shadow:0 1px 0 var(--ink)}
 .btn.go{background:var(--mint)}
 .btn.play{background:var(--sun)}
@@ -63,10 +64,10 @@ button{font-family:inherit;color:inherit;cursor:pointer}
   background:linear-gradient(160deg,var(--tc),#fff 130%);transition:transform .15s,box-shadow .15s;overflow:hidden}
 .topic:nth-child(odd){transform:rotate(-1.4deg)}
 .topic:nth-child(even){transform:rotate(1.4deg)}
-.topic:hover{transform:rotate(0) translateY(-6px) scale(1.03);box-shadow:0 11px 0 var(--ink)}
+@media (hover:hover){.topic:hover{transform:rotate(0) translateY(-6px) scale(1.03);box-shadow:0 11px 0 var(--ink)}}
 .topic:active{transform:translateY(4px);box-shadow:0 1px 0 var(--ink)}
 .topic .ic{font-size:72px;line-height:1.05;filter:drop-shadow(0 4px 0 rgba(27,43,75,.2))}
-.topic:hover .ic{animation:wiggle .5s}
+@media (hover:hover){.topic:hover .ic{animation:wiggle .5s}}
 .topic b{font-size:26px;font-weight:800;line-height:1.05}
 .topic small{font-size:18px;font-weight:600}
 .topic .st{margin-top:6px;font-size:26px;letter-spacing:3px;color:#fff;-webkit-text-stroke:1.5px var(--ink);paint-order:stroke fill}
@@ -91,7 +92,7 @@ button{font-family:inherit;color:inherit;cursor:pointer}
 
 .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:16px}
 .card{display:flex;flex-direction:column;align-items:center;padding:12px 8px 12px;background:var(--paper);transition:transform .12s,box-shadow .12s,background .2s}
-.card:hover{transform:translateY(-3px);box-shadow:0 8px 0 var(--ink)}
+@media (hover:hover){.card:hover{transform:translateY(-3px);box-shadow:0 8px 0 var(--ink)}}
 .card:active,.card.pop{transform:translateY(4px);box-shadow:0 1px 0 var(--ink)}
 .card.lit{background:var(--tc);transform:scale(1.07)}
 .card .v{font-size:68px;line-height:1.15}
@@ -111,7 +112,7 @@ button{font-family:inherit;color:inherit;cursor:pointer}
 .q{margin:0;font-size:24px;font-weight:800}
 .opts{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
 .opt{background:var(--paper);padding:14px 8px;font-size:28px;font-weight:800;min-height:84px;transition:transform .1s,box-shadow .1s}
-.opt:hover{transform:translateY(-2px)}
+@media (hover:hover){.opt:hover{transform:translateY(-2px)}}
 .opts.listen .opt{font-size:60px;line-height:1.1}
 .opts.listen .opt .num{font-size:62px}
 .opt:active{transform:translateY(4px);box-shadow:0 1px 0 var(--ink)}
@@ -182,6 +183,56 @@ button{font-family:inherit;color:inherit;cursor:pointer}
 @media (prefers-reduced-motion:reduce){
   *{animation:none!important;transition:none!important}
 }
+
+/* ---------- Mobil UX ---------- */
+html{-webkit-tap-highlight-color:transparent}
+body{min-height:100vh;min-height:100dvh}
+button,a,.card,.tab{touch-action:manipulation;-webkit-user-select:none;user-select:none}
+#app{padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env(safe-area-inset-right))}
+.btn,.tab{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:48px}
+.nav{position:sticky;top:calc(6px + env(safe-area-inset-top));z-index:25;pointer-events:none}
+.nav .btn{pointer-events:auto}
+.coach{scroll-margin-top:72px}
+.foot{scroll-margin-bottom:110px}
+@media (max-width:560px){
+  #app{padding-top:10px;padding-bottom:170px}
+  .hero{gap:8px;margin-bottom:10px}
+  .hero h1{font-size:clamp(30px,10vw,42px)}
+  .hero p{font-size:17px}
+  .lvl{flex:1 1 100%;order:3}
+  .grid{grid-template-columns:repeat(2,1fr);gap:16px 12px}
+  .topic{padding:10px 12px}
+  .topic .ic{font-size:56px}
+  .topic b{font-size:21px}
+  .topic small{font-size:15px}
+  .topic .st{font-size:22px}
+  .banner{min-height:92px;padding:12px 14px}
+  .banner h2 small{font-size:17px}
+  .banner .fl{font-size:34px}
+  .banner .fl:nth-of-type(n+4){display:none}
+  .cards{grid-template-columns:repeat(2,1fr);gap:12px}
+  .card .v{font-size:60px}
+  .card .v.num{font-size:64px}
+  .opts{gap:10px}
+  .opt{font-size:24px;min-height:76px}
+  .opts.listen .opt{font-size:52px}
+  .album{grid-template-columns:repeat(2,1fr);gap:14px}
+  .tools .btn,.foot .btn,.res .row .btn,.foot .fb{flex:1 1 100%}
+  .bubble{font-size:19px;padding:6px 12px}
+  .tabs{position:fixed;left:0;right:0;bottom:0;z-index:30;margin:0;padding:8px 8px calc(8px + env(safe-area-inset-bottom));
+    display:grid;grid-template-columns:repeat(4,1fr);gap:6px;background:#fff;border-top:3px solid var(--ink)}
+  .tab{flex-direction:column;gap:0;padding:4px 2px;font-size:15px;line-height:1.1;border-width:2px;border-radius:14px;box-shadow:none;min-height:54px}
+  .tab .ti{font-size:22px}
+  .tab.on{box-shadow:0 3px 0 var(--ink)}
+  .hills{height:120px}
+  .floaty{display:none}
+}
+@media (max-height:480px) and (orientation:landscape){
+  .banner{min-height:72px}
+  .big,.big.num{font-size:64px}
+  .qbox{padding:8px}
+  .sun,.floaty{display:none}
+}
 </style>
 </head>
 <body>
@@ -235,9 +286,13 @@ const TOPICS = [
     ['Scared','😨','Korkmuş'],['Cold','🥶','Üşümüş'],['Hot','🥵','Sıcak'],['Surprised','😲','Şaşırmış']]},
   {id:'classroom', name:'Classroom', tr:'Sınıf', icon:'🎒', col:'#9fd3f7', words:[
     ['Book','📖','Kitap'],['Pencil','✏️','Kalem'],['Bag','🎒','Çanta'],['Ruler','📏','Cetvel'],
-    ['Scissors','✂️','Makas'],['School','🏫','Okul'],['Teacher','🧑‍🏫','Öğretmen'],['Pen','🖊️','Tükenmez kalem']]}
+    ['Scissors','✂️','Makas'],['Chair','🪑','Sandalye'],['Teacher','🧑‍🏫','Öğretmen'],['Pen','🖊️','Tükenmez kalem']]},
+  {id:'places', name:'Places', tr:'Yerler', icon:'🏙️', col:'#c9e87a', words:[
+    ['Home','🏠','Ev'],['School','🏫','Okul'],['Park','🌳','Park'],['Hospital','🏥','Hastane'],
+    ['Shop','🏪','Dükkan'],['Library','📚','Kütüphane'],['Zoo','🦒','Hayvanat bahçesi'],
+    ['Farm','🚜','Çiftlik'],['Beach','🏖️','Plaj'],['Bakery','🥖','Fırın']]}
 ];
-const LEVELS = [[0,'Beginner','🐣'],[5,'Explorer','🧭'],[12,'Star','🌟'],[22,'Champion','🏆'],[33,'Super Owl','🦉']];
+const LEVELS = [[0,'Beginner','🐣'],[5,'Explorer','🧭'],[13,'Star','🌟'],[24,'Champion','🏆'],[36,'Super Owl','🦉']];
 const GOOD = [['Great job!','Aferin!'],['Awesome!','Harika!'],['Super!','Süper!'],['Wow!','Vay canına!'],['Perfect!','Mükemmel!']];
 
 /* ---------- Yardımcılar ---------- */
@@ -339,14 +394,14 @@ function topic(id, mode){
   const t = TOPICS.find(x=>x.id===id);
   if (!t) return home();
   if (!['learn','quiz','spell','match'].includes(mode)) mode='learn';
-  const tabs = [['learn','👀 Öğren'],['quiz','❓ Quiz'],['spell','🔤 Harfler'],['match','🃏 Eşleştir']];
+  const tabs = [['learn','👀','Öğren'],['quiz','❓','Quiz'],['spell','🔤','Harfler'],['match','🃏','Eşleştir']];
   const fl = t.words.slice(0,5).map((w,i)=>`<span class="fl" style="right:${3+i*13}%;top:${i%2?58:10}px;animation-delay:${-i*.7}s">${t.num?w[1]:w[1]}</span>`).join('');
   app.style.setProperty('--tc', t.col);
   app.innerHTML = `
   <nav class="nav"><a class="btn" href="#/">← Konular</a></nav>
   <div class="banner" style="--tc:${t.col}"><h2>${t.icon} ${t.name}<small>${t.tr}</small></h2>${fl}</div>
   <div class="tabs" role="tablist">
-    ${tabs.map(([m,l])=>`<a class="tab ${m===mode?'on':''}" role="tab" aria-selected="${m===mode}" style="--tc:${t.col}" href="#/t/${id}/${m}">${l}</a>`).join('')}
+    ${tabs.map(([m,e,l])=>`<a class="tab ${m===mode?'on':''}" role="tab" aria-selected="${m===mode}" style="--tc:${t.col}" href="#/t/${id}/${m}"><span class="ti" aria-hidden="true">${e}</span><span>${l}</span></a>`).join('')}
   </div>
   <div class="coach"><span class="owl" id="coachOwl" aria-hidden="true">🦉</span><div class="bubble" id="bubble"></div><span class="streak" id="streak" hidden></span></div>
   <section id="stage"></section>`;
@@ -400,6 +455,7 @@ function quiz(t){
 
   function show(){
     const q = qs[i]; locked=false;
+    if (i>0) $('.coach').scrollIntoView({block:'start',behavior:'smooth'});
     const prompt = q.type==='pic'
       ? `<div class="big ${cls(t)}" aria-label="resim">${q.w[1]}</div><p class="q">Bu İngilizce ne?</p>`
       : `<button class="btn play" id="play">🔊 Dinle</button><p class="q">Duyduğun hangisi?</p>`;
@@ -431,7 +487,8 @@ function quiz(t){
     $('.foot').innerHTML = `
       <p class="fb ${ok?'g':'r'}">${ok ? 'Harika! 🎉' : `Doğrusu: ${q.w[0]} (${q.w[2]})`}</p>
       <button class="btn go" id="next">${i+1<n ? 'Devam' : 'Sonuç'}</button>`;
-    const nx = $('#next'); nx.onclick=()=>{ i++; i<n ? show() : finish(); }; nx.focus();
+    const nx = $('#next'); nx.onclick=()=>{ i++; i<n ? show() : finish(); }; nx.focus({preventScroll:true});
+    $('.foot').scrollIntoView({block:'nearest',behavior:'smooth'});
   }
 
   function finish(){
@@ -463,6 +520,7 @@ function spell(t){
   function show(){
     if (i>=n) return done();
     const w = pool[i], word = w[0].toLowerCase(); let pos=0;
+    if (i>0) $('.coach').scrollIntoView({block:'start',behavior:'smooth'});
     const letters = shuffle(word.split('').map((c,k)=>({c,k})));
     stage.innerHTML = `
       <div class="prog" aria-label="${i+1}/${n}"><i style="width:${i/n*100}%"></i></div>
@@ -484,7 +542,8 @@ function spell(t){
         if (pos===word.length){
           speak(w[0]); tone(880,.2); const g=pickOne(GOOD); say(g[0],g[1]);
           $('.foot').innerHTML = `<p class="fb g">${w[0]} ✔</p><button class="btn go" id="next">${i+1<n?'Devam':'Bitir'}</button>`;
-          const nx=$('#next'); nx.onclick=()=>{ i++; show(); }; nx.focus();
+          const nx=$('#next'); nx.onclick=()=>{ i++; show(); }; nx.focus({preventScroll:true});
+          $('.foot').scrollIntoView({block:'nearest',behavior:'smooth'});
         }
       } else {
         b.classList.add('bad'); tone(220,.2); say('Oops!','Başka bir harf dene.');
@@ -540,6 +599,7 @@ function match(t){
     confetti(24); say('You found them all!','Hepsini buldun!');
     $('.foot').innerHTML = `<p class="fb g">${moves} hamlede bitirdin! 🎉</p><button class="btn go" id="again">Tekrar oyna</button><a class="btn" href="#/t/${t.id}/quiz">❓ Quiz'e geç</a>`;
     $('#again').onclick=()=>match(t);
+    $('.foot').scrollIntoView({block:'nearest',behavior:'smooth'});
   }
 }
 
